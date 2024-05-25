@@ -1,0 +1,10 @@
+services:
+  db:
+    image: postgres:16.2
+    user: postgres
+    environment:
+      POSTGRES_USER: todoadmin123
+      POSTGRES_PASSWORD: admin!
+      POSTGRES_DB: todo_app
+    ports:
+      - '5432:5432'
