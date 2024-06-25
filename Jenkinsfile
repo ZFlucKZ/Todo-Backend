@@ -2,7 +2,8 @@ pipeline{
     agent any
 
     tools { 
-        go 'Go1.21.9' 
+        go 'Go1.21.9'
+        sonarqube 'sonar-todo'
     }
 
     environment {
@@ -48,6 +49,10 @@ pipeline{
         }
 
         stage('SonarQube Scan'){
+            environment {
+                scannerHome = tool 'sonar4.7'
+            }
+
             steps{
                 withSonarQubeEnv('sonar-todo'){
                     sh '''
