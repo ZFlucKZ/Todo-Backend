@@ -55,7 +55,7 @@ pipeline{
             steps{
                 withSonarQubeEnv('sonar-todo'){
                     sh '''
-                        sonar-scanner \
+                        ${scannerHome}/bin/sonar-scanner \
                         -Dsonar.projectKey=${PROJECT_NAME} \
                         -Dsonar.sources=. \
                         -Dsonar.tests=. \
