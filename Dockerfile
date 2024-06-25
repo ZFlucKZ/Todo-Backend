@@ -4,7 +4,7 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod tidy
 
-COPY . ./
+COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux go build -o app .
 
@@ -14,4 +14,4 @@ WORKDIR /app
 
 COPY --from=builder /app/app /
 
-CMD ["/app/app"]
+CMD ["app"]
