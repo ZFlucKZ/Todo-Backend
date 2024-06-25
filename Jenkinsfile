@@ -3,7 +3,6 @@ pipeline{
 
     tools { 
         go 'Go1.21.9'
-        sonarqube 'sonar-todo'
     }
 
     environment {
