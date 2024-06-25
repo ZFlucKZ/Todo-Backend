@@ -11,7 +11,6 @@ pipeline{
             steps{
                 sh 'go test -v ./... -coverprofile=coverage.out'
             }
-            archiveArtifacts artifacts: 'coverage.out', allowEmptyArchive: true
         }
 
         stage('Integration test'){
@@ -22,7 +21,6 @@ pipeline{
 
         stage('SonarQube Scan'){
             steps{
-                unstash 'coverage.out'
                 withSonarQubeEnv('sonar-todo'){
                     sh '''
                         sonar-scanner \
