@@ -3,7 +3,7 @@ pipeline{
 
     tools { 
         go 'Go1.21.9'
-        docker 'docker-latest'
+        dockerTool 'docker-latest'
     }
 
     environment {
