@@ -3,6 +3,7 @@ pipeline{
 
     tools { 
         go 'Go1.21.9'
+        docker 'docker-latest'
     }
 
     environment {
@@ -74,7 +75,7 @@ pipeline{
         stage('Build Docker Image'){
             steps{
                 script{
-                    dockerImage = docker.build registry + ":V$BUILD_NUMBER"
+                    dockerImage = docker.build(registry + ":V$BUILD_NUMBER")
                 }
             }
         }
