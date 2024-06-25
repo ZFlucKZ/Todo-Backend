@@ -1,21 +1,73 @@
 pipeline{
     agent any
 
+    tools{
+        go 'go1.21.9'
+    }
+
+    environment {
+        registry = "darkza5050/todo-backend"
+        registryCredential = 'dockerhub'
+    }
+
     stages{
-        stage('Build'){
+        stage('Unit test'){
             steps{
-                echo 'Building the app 2'
+                sh 'go test -v ./... -coverprofile=coverage.out'
+            }
+            archiveArtifacts artifacts: 'coverage.out', allowEmptyArchive: true
+        }
+
+        stage('Integration test'){
+            steps{
+                sh 'make test-it-docker'
             }
         }
-        stage('Test'){
+
+        stage('SonarQube Scan'){
             steps{
-                echo 'Testing the app 2'
+                unstash 'coverage.out'
+                withSonarQubeEnv('sonar-todo'){
+                    sh '''
+                        sonar-scanner \
+                        -Dsonar.projectKey=${PROJECT_NAME} \
+                        -Dsonar.sources=. \
+                        -Dsonar.tests=. \
+                        -Dsonar.test.inclusions=**/*_test.go \
+                        -Dsonar.go.coverage.reportPaths=coverage.out \
+                        -Dsonar.language=go
+                    '''
+                }
+
+                timeout(time: 5, unit: 'MINUTES'){
+                    waitForQualityGate abortPipeline: true
+                }
             }
         }
-        stage('Deploy'){
+
+        stage('Build Docker Image'){
             steps{
-                echo 'Deploying the app 2'
+                script{
+                    dockerImage = docker.build registry + ":V$BUILD_NUMBER"
+                }
             }
+        }
+
+        stage('Push Docker Image'){
+            steps{
+                script{
+                    docker.withRegistry('', registryCredential){
+                        dockerImage.push('V$BUILD_NUMBER')
+                        dockerImage.push('latest')
+                    }
+                }
+            }
+        }
+
+        stage('Remove Unused docker image') {
+          steps{
+            sh "docker rmi $registry:V$BUILD_NUMBER"
+          }
         }
     }
-}
+}  
