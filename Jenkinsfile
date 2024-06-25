@@ -1,10 +1,6 @@
 pipeline{
     agent any
 
-    tools{
-        go 'go1.21.9'
-    }
-
     environment {
         registry = "darkza5050/todo-backend"
         registryCredential = 'dockerhub'
