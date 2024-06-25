@@ -91,9 +91,15 @@ pipeline{
         }
 
         stage('Remove Unused docker image') {
-          steps{
-            sh "docker rmi $registry:V$BUILD_NUMBER"
-          }
+            steps{
+                sh "docker rmi $registry:V$BUILD_NUMBER"
+            }
+        }
+
+        stage('Deploy to EC2'){
+            steps{
+                sh "echo Next Step is to deploy to EC2"
+            }
         }
     }
 }  
