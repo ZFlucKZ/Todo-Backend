@@ -11,6 +11,25 @@ pipeline{
     }
 
     stages{
+        stage("Set up make, docker-compose"){
+            steps{
+                sh '''
+                    if ! dpkg -l | grep -q "^ii  make "; then
+                        sudo apt-get update
+                        sudo apt-get install -y make
+                    else
+                        echo "make is already installed."
+                    fi
+                    if ! dpkg -l | grep -q "^ii  docker-compose "; then
+                        sudo apt-get update
+                        sudo apt-get install -y docker-compose
+                    else
+                        echo "docker-compose is already installed."
+                    fi
+                '''
+            }
+        }
+
         stage('Unit test'){
             steps{
                 script {
