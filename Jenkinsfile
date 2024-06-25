@@ -56,12 +56,13 @@ pipeline{
                 withSonarQubeEnv('sonar-todo'){
                     sh '''
                         ${scannerHome}/bin/sonar-scanner \
-                        -Dsonar.projectKey=${PROJECT_NAME} \
+                        -Dsonar.projectKey=todo-backend \
                         -Dsonar.sources=. \
                         -Dsonar.tests=. \
                         -Dsonar.test.inclusions=**/*_test.go \
                         -Dsonar.go.coverage.reportPaths=coverage.out \
                         -Dsonar.language=go
+                        -Dsonar.host.url=http://172.17.32.1:9000
                     '''
                 }
 
