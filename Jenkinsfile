@@ -9,7 +9,12 @@ pipeline{
     stages{
         stage('Unit test'){
             steps{
-                sh 'go test -v ./... -coverprofile=coverage.out'
+                script {
+                    withEnv(['GOROOT=/usr/local/go', 'GOPATH=$HOME/go']) {
+                        sh 'go version'
+                        sh 'go test -v ./... -coverprofile=coverage.out'
+                    }
+                }
             }
         }
 
